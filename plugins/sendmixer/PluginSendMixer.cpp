@@ -50,6 +50,55 @@ PluginSendMixer::~PluginSendMixer() {
 // -----------------------------------------------------------------------
 // Init
 
+void PluginSendMixer::initAudioPort(bool input, uint32_t index, AudioPort& port) {
+    if (input) {
+        switch (index) {
+            case 0:
+                port.name = "Input L";
+                port.symbol = "input_l";
+                break;
+            case 1:
+                port.name = "Input R";
+                port.symbol = "input_r";
+                break;
+            default:
+                port.name = "Input";
+                port.symbol = "input";
+        }
+    }
+    else {
+        switch (index) {
+            case 0:
+                port.name = "Main L";
+                port.symbol = "main_l";
+                break;
+            case 1:
+                port.name = "Main R";
+                port.symbol = "main_r";
+                break;
+            case 2:
+                port.name = "Send A L";
+                port.symbol = "send_a_l";
+                break;
+            case 3:
+                port.name = "Send A R";
+                port.symbol = "send_a_r";
+                break;
+            case 4:
+                port.name = "Send B L";
+                port.symbol = "send_b_l";
+                break;
+            case 5:
+                port.name = "Send B R";
+                port.symbol = "send_b_r";
+                break;
+            default:
+                port.name = "Output";
+                port.symbol = "output";
+        }
+    }
+}
+
 void PluginSendMixer::initParameter(uint32_t index, Parameter& parameter) {
     if (index >= SendMixer::NumParameters)
         return;
