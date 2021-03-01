@@ -1,6 +1,6 @@
 # SendMixer
 
-A stereo channel strip with one master gain and two pre/post-fader sends
+A stereo channel strip plugin with one master gain and two pre/post-fader sends
 
 <img title="SendMixer screenshot" src="sendmixer-screenshot.png" width="557">
 
@@ -8,7 +8,7 @@ A stereo channel strip with one master gain and two pre/post-fader sends
 ## Usage
 
 Here is an example of how SendMixer is used in Carla to provide a reverb
-aux bus for a a synthesizer plugin:
+aux bus for a synthesizer plugin:
 
 <a href="./sendmixer-routing.png"><img title="SendMixer routing in Carla"
   src="sendmixer-routing.png" width="600" border="0"></a>
@@ -16,7 +16,7 @@ aux bus for a a synthesizer plugin:
 
 ## Formats
 
-All plugins in this collection come in the following plug-in formats:
+This plugin comes in the following plug-in formats:
 
 * LADSPA (`sendmixer-ladspa.so`)
 * LV2 (URI: `https://chrisarndt.de/plugins/sendmixer`)
