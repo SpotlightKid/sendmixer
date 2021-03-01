@@ -2,7 +2,16 @@
 
 A stereo channel strip with one master gain and two pre/post-fader sends
 
-![SendMixer screenshot](sendmixer-screenshot.png)
+<img title="SendMixer screenshot" src="sendmixer-screenshot.png" width="557">
+
+
+## Usage
+
+Here is an example of how SendMixer is used in Carla to provide a reverb
+aux bus for a a synthesizer plugin:
+
+<a href="./sendmixer-routing.png"><img title="SendMixer routing in Carla"
+  src="sendmixer-routing.png" width="600" border="0"></a>
 
 
 ## Formats
