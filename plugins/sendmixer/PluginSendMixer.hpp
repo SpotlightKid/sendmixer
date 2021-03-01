@@ -132,7 +132,13 @@ struct Preset {
 const Preset factoryPresets[] = {
     {
         "Default",
-        {-6.0f,}
+        {
+            -60.0f,  // Send A Level
+            1.0f,  // Send A Post
+            -60.0f,  // Send A Level
+            1.0f,  // Send B Post
+            0.0f   // Main Level
+        }
     }
     //,{
     //    "Another preset",  // preset name
