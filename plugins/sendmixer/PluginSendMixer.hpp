@@ -139,6 +139,56 @@ const Preset factoryPresets[] = {
             1.0f,  // Send B Post
             0.0f   // Main Level
         }
+    },
+    {
+        "Muted",
+        {
+            -60.0f,  // Send A Level
+            1.0f,  // Send A Post
+            -60.0f,  // Send A Level
+            1.0f,  // Send B Post
+            -90.0f   // Main Level
+        }
+    },
+    {
+        "Send A -15dB",
+        {
+            -15.0f,  // Send A Level
+            1.0f,  // Send A Post
+            -60.0f,  // Send A Level
+            1.0f,  // Send B Post
+            0.0f   // Main Level
+        }
+    },
+    {
+        "Send A -15dB (Pre)",
+        {
+            -15.0f,  // Send A Level
+            0.0f,  // Send A Post
+            -60.0f,  // Send A Level
+            1.0f,  // Send B Post
+            0.0f   // Main Level
+        }
+    },
+    {
+        "Send A+B -15dB",
+        {
+            -15.0f,  // Send A Level
+            1.0f,  // Send A Post
+            -15.0f,  // Send A Level
+            1.0f,  // Send B Post
+            0.0f   // Main Level
+        }
+    },
+    {
+        "Send A+B -15dB (Pre)",
+        {
+            -15.0f,  // Send A Level
+            0.0f,  // Send A Post
+            -15.0f,  // Send A Level
+            0.0f,  // Send B Post
+            0.0f   // Main Level
+        }
     }
     //,{
     //    "Another preset",  // preset name
