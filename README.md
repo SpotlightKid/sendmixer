@@ -2,13 +2,16 @@
 
 A stereo channel strip with one master gain and two pre/post-fader sends
 
+![SendMixer screenshot](sendmixer-screenshot.png)
+
+
 ## Formats
 
 All plugins in this collection come in the following plug-in formats:
 
-* LADSPA
-* LV2
-* VST2
+* LADSPA (`sendmixer-ladspa.so`)
+* LV2 (URI: `https://chrisarndt.de/plugins/sendmixer`)
+* VST2 (`sendmixer-vst.so`)
 
 The plugins depend on the host to provide a generic UI to control parameters.
 
