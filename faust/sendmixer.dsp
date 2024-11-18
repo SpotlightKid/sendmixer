@@ -2,7 +2,7 @@ declare name "SendMixer";
 declare description "A stereo channel strip with one master gain and two pre/post-fader sends";
 declare version "0.1.0";
 declare author "Christopher Arndt";
-declare license "MIT license";
+declare license "MIT";
 
 import("stdfaust.lib");
 
@@ -18,7 +18,7 @@ channel = _ * ba.db2linear(main_lvl);
 strip = _ <: channel, _, channel : _, send;
 send = _,_ <: select2(send_a_pos) * ba.db2linear(send_a_lvl), select2(send_b_pos) * ba.db2linear(send_b_lvl);
 
-// Combin two strips into a stero strip
+// Combine two strips into a stereo strip
 stereostrip = strip, strip;
 
 // And route the channels to be ordered in stereo pairs
