@@ -111,7 +111,7 @@ void PluginSendMixer::initParameter(uint32_t index, Parameter& parameter) {
     parameter.ranges.min = range->min;
     parameter.ranges.max = range->max;
     parameter.ranges.def = range->init;
-    parameter.hints = kParameterIsAutomable;
+    parameter.hints = kParameterIsAutomatable;
 
     if (dsp->parameter_is_boolean(index))
         parameter.hints |= kParameterIsBoolean;
@@ -121,6 +121,42 @@ void PluginSendMixer::initParameter(uint32_t index, Parameter& parameter) {
         parameter.hints |= kParameterIsLogarithmic;
     if (dsp->parameter_is_trigger(index))
         parameter.hints |= kParameterIsTrigger;
+
+    int group_id = dsp->parameter_group(index);
+    if (group_id != -1) {
+        parameter.groupId = group_id;
+    }
+
+    unsigned sp_count = dsp->parameter_scale_point_count(index);
+
+    if (sp_count > 0) {
+        parameter.enumValues.count = sp_count;
+
+        const char *style = dsp->parameter_style(index);
+        if (strcmp(style, "menu") || strcmp(style, "radio")) {
+            parameter.enumValues.restrictedMode = true;
+        }
+
+        {
+            ParameterEnumerationValue* const values = new ParameterEnumerationValue[sp_count];
+            parameter.enumValues.values = values;
+            for (unsigned point=0; point<sp_count; point++) {
+                const SendMixer::ParameterScalePoint* sp = dsp->parameter_scale_point(index, point);
+                values[point].label = sp->label.c_str();
+                values[point].value = sp->value;
+            }
+        }
+    }
+}
+
+/**
+   Initialize the port group @a groupId.@n
+   This function will be called once,
+   shortly after the plugin is created and all audio ports and parameters have been enumerated.
+ */
+void PluginSendMixer::initPortGroup(uint32_t groupId, PortGroup& portGroup) {
+    portGroup.name = dsp->parameter_group_label(groupId);
+    portGroup.symbol = dsp->parameter_group_symbol(groupId);
 }
 
 /**
