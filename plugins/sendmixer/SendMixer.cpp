@@ -1,4 +1,3 @@
-
 //------------------------------------------------------------------------------
 // This file was generated using the Faust compiler (https://faust.grame.fr),
 // and the Faust post-processor (https://github.com/jpcima/faustpp).
@@ -7,19 +6,16 @@
 // Name: SendMixer
 // Author: Christopher Arndt
 // Copyright: 
-// License: MIT license
+// License: MIT
 // Version: 0.1.0
+// FAUST version: 2.75.17
+// FAUST compilation options: -a /home/chris/tmp/tmpk6xbymbi.cpp -lang cpp -ct 1 -es 1 -mcd 16 -mdd 1024 -mdy 33 -single -ftz 0
 //------------------------------------------------------------------------------
 
 
 
 
-
-
-
 #include "SendMixer.hpp"
-
-
 
 #include <utility>
 #include <cmath>
@@ -95,6 +91,10 @@ typedef SendMixer::BasicDsp dsp;
 
 FAUSTPP_BEGIN_NAMESPACE
 
+// END PREAMBLE
+// START INTRINSICS
+// END INTRINSICS
+// START CLASS CODE
 #ifndef FAUSTFLOAT
 #define FAUSTFLOAT float
 #endif 
@@ -102,8 +102,9 @@ FAUSTPP_BEGIN_NAMESPACE
 FAUSTPP_END_NAMESPACE
 #include <algorithm>
 #include <cmath>
+#include <cstdint>
+#include <math.h>
 FAUSTPP_BEGIN_NAMESPACE
-
 
 #ifndef FAUSTCLASS 
 #define FAUSTCLASS mydsp
@@ -114,33 +115,52 @@ FAUSTPP_BEGIN_NAMESPACE
 #define exp10 __exp10
 #endif
 
+#if defined(_WIN32)
+#define RESTRICT __restrict
+#else
+#define RESTRICT __restrict__
+#endif
+
+
 class mydsp : public dsp {
 	
  FAUSTPP_PRIVATE:
 	
+	int fSampleRate;
+	float fConst0;
+	float fConst1;
 	FAUSTFLOAT fVslider0;
 	float fRec0[2];
-	FAUSTFLOAT fCheckbox0;
 	FAUSTFLOAT fVslider1;
 	float fRec1[2];
-	FAUSTFLOAT fCheckbox1;
+	FAUSTFLOAT fCheckbox0;
 	FAUSTFLOAT fVslider2;
 	float fRec2[2];
-	int fSampleRate;
+	FAUSTFLOAT fCheckbox1;
 	
  public:
+	mydsp() {
+	}
 	
 	void metadata(Meta* m) { 
 		m->declare("author", "Christopher Arndt");
 		m->declare("basics.lib/name", "Faust Basic Element Library");
-		m->declare("basics.lib/version", "0.1");
-		m->declare("compile_options", "-lang cpp -es 1 -scal -ftz 0");
+		m->declare("basics.lib/tabulateNd", "Copyright (C) 2023 Bart Brouns <bart@magnetophon.nl>");
+		m->declare("basics.lib/version", "1.19.1");
+		m->declare("compile_options", "-a /home/chris/tmp/tmpk6xbymbi.cpp -lang cpp -ct 1 -es 1 -mcd 16 -mdd 1024 -mdy 33 -single -ftz 0");
 		m->declare("description", "A stereo channel strip with one master gain and two pre/post-fader sends");
 		m->declare("filename", "sendmixer.dsp");
-		m->declare("license", "MIT license");
+		m->declare("license", "MIT");
+		m->declare("maths.lib/author", "GRAME");
+		m->declare("maths.lib/copyright", "GRAME");
+		m->declare("maths.lib/license", "LGPL with exception");
+		m->declare("maths.lib/name", "Faust Math Library");
+		m->declare("maths.lib/version", "2.8.0");
 		m->declare("name", "SendMixer");
+		m->declare("platform.lib/name", "Generic Platform Library");
+		m->declare("platform.lib/version", "1.3.0");
 		m->declare("signals.lib/name", "Faust Signal Routing Library");
-		m->declare("signals.lib/version", "0.0");
+		m->declare("signals.lib/version", "1.6.0");
 		m->declare("version", "0.1.0");
 	}
 
@@ -150,82 +170,32 @@ class mydsp : public dsp {
 	FAUSTPP_VIRTUAL int getNumOutputs() {
 		return 6;
 	}
-	FAUSTPP_VIRTUAL int getInputRate(int channel) {
-		int rate;
-		switch ((channel)) {
-			case 0: {
-				rate = 1;
-				break;
-			}
-			case 1: {
-				rate = 1;
-				break;
-			}
-			default: {
-				rate = -1;
-				break;
-			}
-		}
-		return rate;
-	}
-	FAUSTPP_VIRTUAL int getOutputRate(int channel) {
-		int rate;
-		switch ((channel)) {
-			case 0: {
-				rate = 1;
-				break;
-			}
-			case 1: {
-				rate = 1;
-				break;
-			}
-			case 2: {
-				rate = 1;
-				break;
-			}
-			case 3: {
-				rate = 1;
-				break;
-			}
-			case 4: {
-				rate = 1;
-				break;
-			}
-			case 5: {
-				rate = 1;
-				break;
-			}
-			default: {
-				rate = -1;
-				break;
-			}
-		}
-		return rate;
-	}
 	
 	static void classInit(int sample_rate) {
 	}
 	
 	FAUSTPP_VIRTUAL void instanceConstants(int sample_rate) {
 		fSampleRate = sample_rate;
+		fConst0 = 44.1f / std::min<float>(1.92e+05f, std::max<float>(1.0f, float(fSampleRate)));
+		fConst1 = 1.0f - fConst0;
 	}
 	
 	FAUSTPP_VIRTUAL void instanceResetUserInterface() {
 		fVslider0 = FAUSTFLOAT(0.0f);
+		fVslider1 = FAUSTFLOAT(-6e+01f);
 		fCheckbox0 = FAUSTFLOAT(0.0f);
-		fVslider1 = FAUSTFLOAT(-60.0f);
+		fVslider2 = FAUSTFLOAT(-6e+01f);
 		fCheckbox1 = FAUSTFLOAT(0.0f);
-		fVslider2 = FAUSTFLOAT(-60.0f);
 	}
 	
 	FAUSTPP_VIRTUAL void instanceClear() {
-		for (int l0 = 0; (l0 < 2); l0 = (l0 + 1)) {
+		for (int l0 = 0; l0 < 2; l0 = l0 + 1) {
 			fRec0[l0] = 0.0f;
 		}
-		for (int l1 = 0; (l1 < 2); l1 = (l1 + 1)) {
+		for (int l1 = 0; l1 < 2; l1 = l1 + 1) {
 			fRec1[l1] = 0.0f;
 		}
-		for (int l2 = 0; (l2 < 2); l2 = (l2 + 1)) {
+		for (int l2 = 0; l2 < 2; l2 = l2 + 1) {
 			fRec2[l2] = 0.0f;
 		}
 	}
@@ -234,6 +204,7 @@ class mydsp : public dsp {
 		classInit(sample_rate);
 		instanceInit(sample_rate);
 	}
+	
 	FAUSTPP_VIRTUAL void instanceInit(int sample_rate) {
 		instanceConstants(sample_rate);
 		instanceResetUserInterface();
@@ -251,34 +222,30 @@ class mydsp : public dsp {
 	FAUSTPP_VIRTUAL void buildUserInterface(UI* ui_interface) {
 		ui_interface->openVerticalBox("SendMixer");
 		ui_interface->declare(&fVslider1, "1", "");
-		ui_interface->declare(&fVslider1, "abbrev", "send_a_lvl");
 		ui_interface->declare(&fVslider1, "style", "knob");
 		ui_interface->declare(&fVslider1, "symbol", "send_a_lvl");
 		ui_interface->declare(&fVslider1, "unit", "dB");
-		ui_interface->addVerticalSlider("Send A", &fVslider1, -60.0f, -60.0f, 0.0f, 0.00999999978f);
+		ui_interface->addVerticalSlider("Send A", &fVslider1, FAUSTFLOAT(-6e+01f), FAUSTFLOAT(-6e+01f), FAUSTFLOAT(0.0f), FAUSTFLOAT(0.01f));
 		ui_interface->declare(&fCheckbox0, "2", "");
-		ui_interface->declare(&fCheckbox0, "abbrev", "send_a_post");
 		ui_interface->declare(&fCheckbox0, "symbol", "send_a_post");
 		ui_interface->addCheckButton("Send A Post", &fCheckbox0);
 		ui_interface->declare(&fVslider2, "3", "");
-		ui_interface->declare(&fVslider2, "abbrev", "send_b_lvl");
 		ui_interface->declare(&fVslider2, "style", "knob");
 		ui_interface->declare(&fVslider2, "symbol", "send_b_lvl");
 		ui_interface->declare(&fVslider2, "unit", "dB");
-		ui_interface->addVerticalSlider("Send B", &fVslider2, -60.0f, -60.0f, 0.0f, 0.00999999978f);
+		ui_interface->addVerticalSlider("Send B", &fVslider2, FAUSTFLOAT(-6e+01f), FAUSTFLOAT(-6e+01f), FAUSTFLOAT(0.0f), FAUSTFLOAT(0.01f));
 		ui_interface->declare(&fCheckbox1, "4", "");
-		ui_interface->declare(&fCheckbox1, "abbrev", "send_b_post");
 		ui_interface->declare(&fCheckbox1, "symbol", "send_b_post");
 		ui_interface->addCheckButton("Send B Post", &fCheckbox1);
 		ui_interface->declare(&fVslider0, "5", "");
-		ui_interface->declare(&fVslider0, "abbrev", "main_lvl");
+		ui_interface->declare(&fVslider0, "style", "slider");
 		ui_interface->declare(&fVslider0, "symbol", "main_lvl");
 		ui_interface->declare(&fVslider0, "unit", "dB");
-		ui_interface->addVerticalSlider("Volume", &fVslider0, 0.0f, -90.0f, 20.0f, 0.00999999978f);
+		ui_interface->addVerticalSlider("Main Level", &fVslider0, FAUSTFLOAT(0.0f), FAUSTFLOAT(-9e+01f), FAUSTFLOAT(2e+01f), FAUSTFLOAT(0.01f));
 		ui_interface->closeBox();
 	}
 	
-	FAUSTPP_VIRTUAL void compute(int count, FAUSTFLOAT** inputs, FAUSTFLOAT** outputs) {
+	FAUSTPP_VIRTUAL void compute(int count, FAUSTFLOAT** RESTRICT inputs, FAUSTFLOAT** RESTRICT outputs) {
 		FAUSTFLOAT* input0 = inputs[0];
 		FAUSTFLOAT* input1 = inputs[1];
 		FAUSTFLOAT* output0 = outputs[0];
@@ -287,28 +254,28 @@ class mydsp : public dsp {
 		FAUSTFLOAT* output3 = outputs[3];
 		FAUSTFLOAT* output4 = outputs[4];
 		FAUSTFLOAT* output5 = outputs[5];
-		float fSlow0 = (0.00100000005f * float(fVslider0));
-		int iSlow1 = int(float(fCheckbox0));
-		float fSlow2 = (0.00100000005f * float(fVslider1));
-		int iSlow3 = int(float(fCheckbox1));
-		float fSlow4 = (0.00100000005f * float(fVslider2));
-		for (int i = 0; (i < count); i = (i + 1)) {
-			float fTemp0 = float(input0[i]);
-			fRec0[0] = (fSlow0 + (0.999000013f * fRec0[1]));
-			float fTemp1 = std::pow(10.0f, (0.0500000007f * fRec0[0]));
-			float fTemp2 = (fTemp0 * fTemp1);
-			output0[i] = FAUSTFLOAT(fTemp2);
-			float fTemp3 = float(input1[i]);
-			float fTemp4 = (fTemp3 * fTemp1);
-			output1[i] = FAUSTFLOAT(fTemp4);
-			fRec1[0] = (fSlow2 + (0.999000013f * fRec1[1]));
-			float fTemp5 = std::pow(10.0f, (0.0500000007f * fRec1[0]));
-			output2[i] = FAUSTFLOAT(((iSlow1 ? fTemp2 : fTemp0) * fTemp5));
-			output3[i] = FAUSTFLOAT((fTemp5 * (iSlow1 ? fTemp4 : fTemp3)));
-			fRec2[0] = (fSlow4 + (0.999000013f * fRec2[1]));
-			float fTemp6 = std::pow(10.0f, (0.0500000007f * fRec2[0]));
-			output4[i] = FAUSTFLOAT(((iSlow3 ? fTemp2 : fTemp0) * fTemp6));
-			output5[i] = FAUSTFLOAT((fTemp6 * (iSlow3 ? fTemp4 : fTemp3)));
+		float fSlow0 = fConst0 * float(fVslider0);
+		float fSlow1 = fConst0 * float(fVslider1);
+		int iSlow2 = int(float(fCheckbox0));
+		float fSlow3 = fConst0 * float(fVslider2);
+		int iSlow4 = int(float(fCheckbox1));
+		for (int i0 = 0; i0 < count; i0 = i0 + 1) {
+			fRec0[0] = fSlow0 + fConst1 * fRec0[1];
+			float fTemp0 = std::pow(1e+01f, 0.05f * fRec0[0]);
+			float fTemp1 = float(input0[i0]);
+			float fTemp2 = fTemp1 * fTemp0;
+			output0[i0] = FAUSTFLOAT(fTemp2);
+			float fTemp3 = float(input1[i0]);
+			float fTemp4 = fTemp3 * fTemp0;
+			output1[i0] = FAUSTFLOAT(fTemp4);
+			fRec1[0] = fSlow1 + fConst1 * fRec1[1];
+			float fTemp5 = std::pow(1e+01f, 0.05f * fRec1[0]);
+			output2[i0] = FAUSTFLOAT(((iSlow2) ? fTemp2 : fTemp1) * fTemp5);
+			output3[i0] = FAUSTFLOAT(fTemp5 * ((iSlow2) ? fTemp4 : fTemp3));
+			fRec2[0] = fSlow3 + fConst1 * fRec2[1];
+			float fTemp6 = std::pow(1e+01f, 0.05f * fRec2[0]);
+			output4[i0] = FAUSTFLOAT(((iSlow4) ? fTemp2 : fTemp1) * fTemp6);
+			output5[i0] = FAUSTFLOAT(fTemp6 * ((iSlow4) ? fTemp4 : fTemp3));
 			fRec0[1] = fRec0[0];
 			fRec1[1] = fRec1[0];
 			fRec2[1] = fRec2[0];
@@ -316,13 +283,15 @@ class mydsp : public dsp {
 	}
 
 };
+// END CLASS CODE
+// START EPILOG
 FAUSTPP_END_NAMESPACE
+
 
 
 #if defined(__GNUC__)
 #   pragma GCC diagnostic pop
 #endif
-
 
 
 //------------------------------------------------------------------------------
@@ -333,11 +302,9 @@ FAUSTPP_END_NAMESPACE
 
 SendMixer::SendMixer()
 {
-
-    mydsp *dsp = new mydsp;
+mydsp *dsp = new mydsp;
     fDsp.reset(dsp);
     dsp->instanceResetUserInterface();
-
 }
 
 SendMixer::~SendMixer()
@@ -346,37 +313,78 @@ SendMixer::~SendMixer()
 
 void SendMixer::init(float sample_rate)
 {
-
-    mydsp &dsp = static_cast<mydsp &>(*fDsp);
+mydsp &dsp = static_cast<mydsp &>(*fDsp);
     dsp.classInit(sample_rate);
     dsp.instanceConstants(sample_rate);
     clear();
-
 }
 
 void SendMixer::clear() noexcept
 {
-
-    mydsp &dsp = static_cast<mydsp &>(*fDsp);
+mydsp &dsp = static_cast<mydsp &>(*fDsp);
     dsp.instanceClear();
-
 }
 
 void SendMixer::process(
-    const float *in0,const float *in1,
-    float *out0,float *out1,float *out2,float *out3,float *out4,float *out5,
+    const float *in0, const float *in1, 
+    float *out0, float *out1, float *out2, float *out3, float *out4, float *out5, 
     unsigned count) noexcept
 {
-
-    mydsp &dsp = static_cast<mydsp &>(*fDsp);
+mydsp &dsp = static_cast<mydsp &>(*fDsp);
     float *inputs[] = {
-        const_cast<float *>(in0),const_cast<float *>(in1),
+        const_cast<float *>(in0), const_cast<float *>(in1), 
     };
     float *outputs[] = {
-        out0,out1,out2,out3,out4,out5,
+        out0, out1, out2, out3, out4, out5, 
     };
     dsp.compute(count, inputs, outputs);
+}
 
+int SendMixer::parameter_group(unsigned index) noexcept
+{
+    switch (index) {
+    
+    default:
+        return -1;
+    }
+}
+
+const char *SendMixer::parameter_group_label(unsigned group_id) noexcept
+{
+    switch (group_id) {
+    
+    default:
+        return 0;
+    }
+}
+
+const char *SendMixer::parameter_group_symbol(unsigned group_id) noexcept
+{
+    switch (group_id) {
+    
+    default:
+        return 0;
+    }
+}
+
+
+int SendMixer::parameter_order(unsigned index) noexcept
+{
+    switch (index) {
+    
+    case 0:
+        return 1;
+    case 1:
+        return 2;
+    case 2:
+        return 3;
+    case 3:
+        return 4;
+    case 4:
+        return 5;
+    default:
+        return -1;
+    }
 }
 
 const char *SendMixer::parameter_label(unsigned index) noexcept
@@ -385,19 +393,14 @@ const char *SendMixer::parameter_label(unsigned index) noexcept
     
     case 0:
         return "Send A";
-    
     case 1:
         return "Send A Post";
-    
     case 2:
         return "Send B";
-    
     case 3:
         return "Send B Post";
-    
     case 4:
-        return "Volume";
-    
+        return "Main Level";
     default:
         return 0;
     }
@@ -408,22 +411,29 @@ const char *SendMixer::parameter_short_label(unsigned index) noexcept
     switch (index) {
     
     case 0:
-        return "send_a_lvl";
-    
+        return "Send A";
     case 1:
-        return "send_a_post";
-    
+        return "Send A Post";
     case 2:
-        return "send_b_lvl";
-    
+        return "Send B";
     case 3:
-        return "send_b_post";
-    
+        return "Send B Post";
     case 4:
-        return "main_lvl";
-    
+        return "Main Level";
     default:
         return 0;
+    }
+}
+
+const char *SendMixer::parameter_style(unsigned index) noexcept
+{
+    switch (index) {
+    
+    case 4: {
+        return "slider";
+    }
+    default:
+        return "knob";
     }
 }
 
@@ -433,19 +443,14 @@ const char *SendMixer::parameter_symbol(unsigned index) noexcept
     
     case 0:
         return "send_a_lvl";
-    
     case 1:
         return "send_a_post";
-    
     case 2:
         return "send_b_lvl";
-    
     case 3:
         return "send_b_post";
-    
     case 4:
         return "main_lvl";
-    
     default:
         return 0;
     }
@@ -457,19 +462,14 @@ const char *SendMixer::parameter_unit(unsigned index) noexcept
     
     case 0:
         return "dB";
-    
     case 1:
         return "";
-    
     case 2:
         return "dB";
-    
     case 3:
         return "";
-    
     case 4:
         return "dB";
-    
     default:
         return 0;
     }
@@ -480,33 +480,48 @@ const SendMixer::ParameterRange *SendMixer::parameter_range(unsigned index) noex
     switch (index) {
     
     case 0: {
-        static const ParameterRange range = { -60, -60, 0 };
+        static const ParameterRange range = { -60.0, -60.0, 0.0 };
         return &range;
     }
-    
     case 1: {
         static const ParameterRange range = { 0, 0, 1 };
         return &range;
     }
-    
     case 2: {
-        static const ParameterRange range = { -60, -60, 0 };
+        static const ParameterRange range = { -60.0, -60.0, 0.0 };
         return &range;
     }
-    
     case 3: {
         static const ParameterRange range = { 0, 0, 1 };
         return &range;
     }
-    
     case 4: {
-        static const ParameterRange range = { 0, -90, 20 };
+        static const ParameterRange range = { 0.0, -90.0, 20.0 };
         return &range;
     }
+    default:
+        return 0;
+    }
+}
+
+unsigned SendMixer::parameter_scale_point_count(unsigned index) noexcept
+{
+    switch (index) {
     
     default:
         return 0;
     }
+}
+
+const SendMixer::ParameterScalePoint *SendMixer::parameter_scale_point(unsigned index, unsigned point) noexcept
+{
+    
+    switch (index) {
+    
+    default:
+        return 0;
+    }
+    (void) point;
 }
 
 bool SendMixer::parameter_is_trigger(unsigned index) noexcept
@@ -524,9 +539,16 @@ bool SendMixer::parameter_is_boolean(unsigned index) noexcept
     
     case 1:
         return true;
-    
     case 3:
         return true;
+    default:
+        return false;
+    }
+}
+
+bool SendMixer::parameter_is_enum(unsigned index) noexcept
+{
+    switch (index) {
     
     default:
         return false;
@@ -539,10 +561,8 @@ bool SendMixer::parameter_is_integer(unsigned index) noexcept
     
     case 1:
         return true;
-    
     case 3:
         return true;
-    
     default:
         return false;
     }
@@ -564,19 +584,14 @@ float SendMixer::get_parameter(unsigned index) const noexcept
     
     case 0:
         return dsp.fVslider1;
-    
     case 1:
         return dsp.fCheckbox0;
-    
     case 2:
         return dsp.fVslider2;
-    
     case 3:
         return dsp.fCheckbox1;
-    
     case 4:
         return dsp.fVslider0;
-    
     default:
         (void)dsp;
         return 0;
@@ -591,23 +606,18 @@ void SendMixer::set_parameter(unsigned index, float value) noexcept
     case 0:
         dsp.fVslider1 = value;
         break;
-    
     case 1:
         dsp.fCheckbox0 = value;
         break;
-    
     case 2:
         dsp.fVslider2 = value;
         break;
-    
     case 3:
         dsp.fCheckbox1 = value;
         break;
-    
     case 4:
         dsp.fVslider0 = value;
         break;
-    
     default:
         (void)dsp;
         (void)value;
@@ -676,7 +686,5 @@ void SendMixer::set_main_lvl(float value) noexcept
     mydsp &dsp = static_cast<mydsp &>(*fDsp);
     dsp.fVslider0 = value;
 }
-
-
 
 
