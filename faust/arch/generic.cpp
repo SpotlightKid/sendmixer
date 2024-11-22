@@ -1,7 +1,7 @@
 {% block ImplementationDescription -%}
 //------------------------------------------------------------------------------
 // This file was generated using the Faust compiler (https://faust.grame.fr),
-// and the Faust post-processor (https://github.com/jpcima/faustpp).
+// and the Faust post-processor (https://github.com/SpotlightKid/faustdoctor).
 //
 // Source: {{filename}}
 // Name: {{name}}
@@ -67,13 +67,13 @@ typedef {{Identifier}}::BasicDsp dsp;
 
 } // namespace
 
-#define FAUSTPP_VIRTUAL // do not declare any methods virtual
-#define FAUSTPP_PRIVATE public // do not hide any members
-#define FAUSTPP_PROTECTED public // do not hide any members
+#define FAUSTDR_VIRTUAL // do not declare any methods virtual
+#define FAUSTDR_PRIVATE public // do not hide any members
+#define FAUSTDR_PROTECTED public // do not hide any members
 
 // define the DSP in the anonymous namespace
-#define FAUSTPP_BEGIN_NAMESPACE namespace {
-#define FAUSTPP_END_NAMESPACE }
+#define FAUSTDR_BEGIN_NAMESPACE namespace {
+#define FAUSTDR_END_NAMESPACE }
 
 {% block ImplementationFaustCode %}
 #if defined(__GNUC__)
@@ -81,14 +81,14 @@ typedef {{Identifier}}::BasicDsp dsp;
 #   pragma GCC diagnostic ignored "-Wunused-parameter"
 #endif
 
-#ifndef FAUSTPP_PRIVATE
-#   define FAUSTPP_PRIVATE private
+#ifndef FAUSTDR_PRIVATE
+#   define FAUSTDR_PRIVATE private
 #endif
-#ifndef FAUSTPP_PROTECTED
-#   define FAUSTPP_PROTECTED protected
+#ifndef FAUSTDR_PROTECTED
+#   define FAUSTDR_PROTECTED protected
 #endif
-#ifndef FAUSTPP_VIRTUAL
-#   define FAUSTPP_VIRTUAL virtual
+#ifndef FAUSTDR_VIRTUAL
+#   define FAUSTDR_VIRTUAL virtual
 #endif
 
 {{classcode}}
@@ -290,10 +290,10 @@ unsigned {{Identifier}}::parameter_scale_point_count(unsigned index) noexcept
 
 const {{Identifier}}::ParameterScalePoint *{{Identifier}}::parameter_scale_point(unsigned index, unsigned point) noexcept
 {
-    {% set ns = namespace(has_points=false) %}
+    {% set ns = namespace(has_points=false) -%}
     switch (index) {
     {% for w in active + passive %}{% if w.entries %}
-    {% set ns.has_points = true %}
+    {% set ns.has_points = true -%}
     case {{loop.index0}}:
         switch (point) {
         {% for label, value in w.entries %}

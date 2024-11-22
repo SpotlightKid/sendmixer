@@ -1,6 +1,6 @@
 //------------------------------------------------------------------------------
 // This file was generated using the Faust compiler (https://faust.grame.fr),
-// and the Faust post-processor (https://github.com/jpcima/faustpp).
+// and the Faust post-processor (https://github.com/SpotlightKid/faustdoctor).
 //
 // Source: sendmixer.dsp
 // Name: SendMixer
@@ -8,8 +8,8 @@
 // Copyright: 
 // License: MIT
 // Version: 0.1.0
-// FAUST version: 2.75.17
-// FAUST compilation options: -a /home/chris/tmp/tmps67fxy9r.cpp -lang cpp -ct 1 -es 1 -mcd 16 -mdd 1024 -mdy 33 -single -ftz 0
+// FAUST version: 2.76.0
+// FAUST compilation options: -a /home/chris/tmp/tmpzfo0utj4.cpp -lang cpp -ct 1 -es 1 -mcd 16 -mdd 1024 -mdy 33 -single -ftz 0
 //------------------------------------------------------------------------------
 
 
